@@ -104,9 +104,9 @@ class DCGAN:
                     prob_fake = net_discr(gen_imgs.detach())
                     real_loss = criterion(prob_real, real_gt)
                     fake_loss = criterion(prob_fake, fake_gt)
-                    loss_discr = (real_loss + fake_loss) / 2
+                    loss_d = (real_loss + fake_loss) / 2
                     # 反向传播
-                    loss_discr.backward()
+                    loss_d.backward()
                     # 更新参数
                     optimizer_discr.step()
                 # end for _
@@ -121,16 +121,16 @@ class DCGAN:
                 # 判别器的输出
                 discr_out = net_discr(gen_imgs)
                 # 计算生成器的损失函数
-                loss_gen = criterion(discr_out, real_gt)
+                loss_g = criterion(discr_out, real_gt)
                 # 反向传播
-                loss_gen.backward()
+                loss_g.backward()
                 # 更新参数
                 optimizer_gen.step()
             # end while
 
             print("\r DCGAN：[Epoch %d/%d] [D loss： %.3f] [G loss： %.3f] "
                   "[D pr ob real：%.3f] [D prob fake：%.3f] [Time： %.3f]"
-                  % (epoch + 1, epochs, loss_discr.item(), loss_gen.item(),
+                  % (epoch + 1, epochs, loss_d.item(), loss_g.item(),
                      prob_real.mean().item(), prob_fake.mean().item(),
                      timeit.default_timer() - start_time))
 

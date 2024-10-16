@@ -87,8 +87,8 @@ class SNGAN:
                     prob_fake = net_discr(gen_imgs.detach())
                     real_loss = criterion(prob_real, real_gt)
                     fake_loss = criterion(prob_fake, fake_gt)
-                    loss_discr = (real_loss + fake_loss) / 2
-                    loss_discr.backward()
+                    loss_d = (real_loss + fake_loss) / 2
+                    loss_d.backward()
                     optimizer_discr.step()
 
                 '''更新生成器G'''
@@ -97,13 +97,13 @@ class SNGAN:
                                 dtype=torch.float32).to(device)
                 gen_imgs = net_gen(z)
                 discr_out = net_discr(gen_imgs)
-                loss_gen = criterion(discr_out, real_gt)
-                loss_gen.backward()
+                loss_g = criterion(discr_out, real_gt)
+                loss_g.backward()
                 optimizer_gen.step()
 
             print("\r SNGAN：[Epoch %d/%d] [D loss： %.3f] [G loss： %.3f] "
                   "[D prob real：%.3f] [D prob fake：%.3f] [Time： %.3f]"
-                  % (epoch + 1, epochs, loss_discr.item(), loss_gen.item(),
+                  % (epoch + 1, epochs, loss_d.item(), loss_g.item(),
                      prob_real.mean().item(), prob_fake.mean().item(),
                      timeit.default_timer() - start_time))
 

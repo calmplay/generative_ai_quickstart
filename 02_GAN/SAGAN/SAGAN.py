@@ -74,8 +74,8 @@ class SAGAN:
                     prob_fake = net_discr(gen_imgs.detach())
                     real_loss = criterion(prob_real, real_gt)
                     fake_loss = criterion(prob_fake, fake_gt)
-                    loss_discr = (real_loss + fake_loss) / 2
-                    loss_discr.backward()
+                    loss_d = (real_loss + fake_loss) / 2
+                    loss_d.backward()
                     optimizer_discr.step()
 
                 '''更新生成器'''
@@ -84,13 +84,13 @@ class SAGAN:
                                 dtype=torch.float32).to(device)
                 gen_imgs = net_gen(z)
                 discr_out = net_discr(gen_imgs)
-                loss_gen = criterion(discr_out, real_gt)
-                loss_gen.backward()
+                loss_g = criterion(discr_out, real_gt)
+                loss_g.backward()
                 optimizer_gen.step()
 
             print(
-                f"\r SAGAN [Epoch {epoch + 1}/{epochs}] [D loss: {loss_discr.item():.3f}] "
-                f"[G loss: {loss_gen.item():.3f}] [Time: {timeit.default_timer() - start_time:.3f}]")
+                f"\r SAGAN [Epoch {epoch + 1}/{epochs}] [D loss: {loss_d.item():.3f}] "
+                f"[G loss: {loss_g.item():.3f}] [Time: {timeit.default_timer() - start_time:.3f}]")
 
             if (epoch + 1) % 10 == 0:
                 net_gen.eval()

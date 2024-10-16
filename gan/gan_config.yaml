@@ -1,0 +1,11 @@
+# Config file for GAN
+gan_type: "dcgan"
+img_size: 32
+in_channels: 1
+batch_size: 256
+dim_z: 128  # dimension of noise vector
+learning_rate: 0.0001
+beta1: 0.5
+beta2: 0.999
+epochs: 2
+num_iter_d: 2  # number of updates of discriminator each loop

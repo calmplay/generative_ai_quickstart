@@ -80,14 +80,14 @@ class GAN:
 
                 # 生成器G的优化
                 optimizer_gen.zero_grad()
-                fake_loss_gen = criterion(net_discr(fake_imgs),
+                fake_loss_g = criterion(net_discr(fake_imgs),
                                           real_labels)  # 生成器希望判别器将其生成的图片判为真
-                fake_loss_gen.backward()
+                fake_loss_g.backward()
                 optimizer_gen.step()
 
             # 输出每个epoch的损失
             print(
-                    f"GAN [Epoch {epoch + 1}/{epochs}] [D loss: {discr_loss.item():.4f}] [G loss: {fake_loss_gen.item():.4f}] [Time: {timeit.default_timer() - start_time:.3f}s]")
+                    f"GAN [Epoch {epoch + 1}/{epochs}] [D loss: {discr_loss.item():.4f}] [G loss: {fake_loss_g.item():.4f}] [Time: {timeit.default_timer() - start_time:.3f}s]")
 
             # 每10个epoch保存一次生成的图像
             if (epoch + 1) % 10 == 0:

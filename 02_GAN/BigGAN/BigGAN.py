@@ -87,8 +87,8 @@ class BigGAN:
                     # 判别器对生成图片的损失
                     prob_fake, aux_fake = net_discr(gen_imgs.detach())
                     fake_loss_adv = criterion_adv(prob_fake, fake_gt)
-                    loss_discr = (real_loss + fake_loss_adv) / 2
-                    loss_discr.backward()
+                    loss_d = (real_loss + fake_loss_adv) / 2
+                    loss_d.backward()
                     optimizer_discr.step()
 
                 '''更新生成器'''
@@ -99,15 +99,15 @@ class BigGAN:
                     device)
                 gen_imgs = net_gen(z, fake_labels)
                 prob_fake, aux_fake = net_discr(gen_imgs)
-                loss_gen_adv = criterion_adv(prob_fake, real_gt)
-                loss_gen_aux = criterion_aux(aux_fake, fake_labels)
-                loss_gen = loss_gen_adv + loss_gen_aux
-                loss_gen.backward()
+                loss_g_adv = criterion_adv(prob_fake, real_gt)
+                loss_g_aux = criterion_aux(aux_fake, fake_labels)
+                loss_g = loss_g_adv + loss_g_aux
+                loss_g.backward()
                 optimizer_gen.step()
 
             print(
-                f"\r BigGAN [Epoch {epoch + 1}/{epochs}] [D loss: {loss_discr.item():.3f}] "
-                f"[G loss: {loss_gen.item():.3f}] [Time: {timeit.default_timer() - start_time:.3f}]")
+                f"\r BigGAN [Epoch {epoch + 1}/{epochs}] [D loss: {loss_d.item():.3f}] "
+                f"[G loss: {loss_g.item():.3f}] [Time: {timeit.default_timer() - start_time:.3f}]")
 
             if (epoch + 1) % 10 == 0:
                 net_gen.eval()
